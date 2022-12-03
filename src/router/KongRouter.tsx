@@ -101,7 +101,6 @@ const columns: ColumnsType<RoutesListProps> = [
 
 const KongRouter: React.FC = () => {
     const [routesList,setroutesList] = useState<RoutesListProps[]>([]);
-    const [pageIndex,setPageIndex] = useState(1);
 
     useEffect(() => {
         axios.get('/api/routes').then(res => {
@@ -109,8 +108,8 @@ const KongRouter: React.FC = () => {
         }).catch(err => {
             console.log(err);
         })
-    },[pageIndex]);
-    console.log(routesList)
+    },[]);
+
     return (
         <Table columns={columns} dataSource={routesList} />
     );

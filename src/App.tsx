@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  DesktopOutlined,
+  CloudServerOutlined,
   PieChartOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -28,7 +28,7 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem(<Link to="kong_status" >状态</Link>, '1', <PieChartOutlined />),
-  getItem(<Link to="kong_services" >服务</Link>, '2', <DesktopOutlined />),
+  getItem(<Link to="kong_services" >服务</Link>, '2', <CloudServerOutlined />),
   getItem(<Link to="kong_router" >路由</Link>, '3', <UserOutlined />),
 ];
 

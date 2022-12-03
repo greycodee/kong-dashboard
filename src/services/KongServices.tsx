@@ -1,8 +1,8 @@
 import React,{useEffect,useState }from 'react';
-import { Space, Table, Tag, Button, Checkbox, Form, Input } from 'antd';
+import { Space, Table, Tag, Button} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import axios from 'axios';
-
+import AddService from './AddService';
 interface ServicesListProps {
     created_at: number;
     tls_verify?: any;
@@ -62,66 +62,31 @@ const columns: ColumnsType<ServicesListProps> = [
 
 const KongServices: React.FC = () => {
     const [servicesList,setServicesList] = useState<ServicesListProps[]>([]);
-    const [pageIndex,setPageIndex] = useState(1);
+    const [open, setOpen] = useState(false);
 
-    const onFinish = (values: any) => {
-      console.log('Success:', values);
+    const showDrawer = () => {
+      setOpen(true);
     };
-  
-    const onFinishFailed = (errorInfo: any) => {
-      console.log('Failed:', errorInfo);
+
+    const onClose = () => {
+      setOpen(false);
     };
-  
-    
 
 
     useEffect(() => {
         axios.get('/api/services').then(res => {
             setServicesList([...servicesList,...res.data.data]);
+            console.log(servicesList)
         }).catch(err => {
             console.log(err);
         })
-    },[pageIndex]);
-    console.log(servicesList)
+    },[]);
+  
     return (
         <>
-          <Form
-            name="basic"
-            initialValues={{ remember: true }}
-            layout="inline"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            autoComplete="off"
-          >
-           
-            <Form.Item
-              label="Username"
-              name="username"
-              
-              rules={[{ required: true, message: 'Please input your username!' }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[{ required: true, message: 'Please input your password!' }]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item name="remember" valuePropName="checked">
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
-          <Table columns={columns} dataSource={servicesList} />
+          <Button type="primary" style={{marginTop:10}} onClick={showDrawer}>添加Service</Button>
+          <Table columns={columns} dataSource={servicesList} style={{marginTop:10}}/>
+          <AddService open={open} onClose={onClose} showDrawer={showDrawer} ></AddService>
         </>
     );
 }
