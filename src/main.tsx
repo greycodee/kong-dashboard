@@ -17,15 +17,15 @@ const routeData = [
     element: <App />,
     children:[
       {
-        path: "/status",
+        path: "/kong_status",
         element: <KongStatus />
       },
       {
-        path: "/services",
+        path: "/kong_services",
         element: <KongServices />
       },
       {
-        path: "/router",
+        path: "/kong_router",
         element: <KongRouter />
       }
     ]

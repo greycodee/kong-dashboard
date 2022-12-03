@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import {
   DesktopOutlined,
-  FileOutlined,
   PieChartOutlined,
-  TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu } from 'antd';
+import { Layout, Menu } from 'antd';
 import { Outlet,Link } from 'react-router-dom';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -29,9 +27,9 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem(<Link to="status" >状态</Link>, '1', <PieChartOutlined />),
-  getItem(<Link to="services" >服务</Link>, '2', <DesktopOutlined />),
-  getItem(<Link to="router" >路由</Link>, '3', <UserOutlined />),
+  getItem(<Link to="kong_status" >状态</Link>, '1', <PieChartOutlined />),
+  getItem(<Link to="kong_services" >服务</Link>, '2', <DesktopOutlined />),
+  getItem(<Link to="kong_router" >路由</Link>, '3', <UserOutlined />),
 ];
 
 const App: React.FC = () => {
