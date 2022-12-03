@@ -1,5 +1,5 @@
 import React,{useEffect,useState }from 'react';
-import { Space, Table, Tag } from 'antd';
+import { Space, Table, Tag, Button, Checkbox, Form, Input } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import axios from 'axios';
 
@@ -63,6 +63,15 @@ const columns: ColumnsType<ServicesListProps> = [
 const KongServices: React.FC = () => {
     const [servicesList,setServicesList] = useState<ServicesListProps[]>([]);
     const [pageIndex,setPageIndex] = useState(1);
+
+    const onFinish = (values: any) => {
+      console.log('Success:', values);
+    };
+  
+    const onFinishFailed = (errorInfo: any) => {
+      console.log('Failed:', errorInfo);
+    };
+  
     
 
 
@@ -75,7 +84,45 @@ const KongServices: React.FC = () => {
     },[pageIndex]);
     console.log(servicesList)
     return (
-        <Table columns={columns} dataSource={servicesList} />
+        <>
+          <Form
+            name="basic"
+            initialValues={{ remember: true }}
+            layout="inline"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
+           
+            <Form.Item
+              label="Username"
+              name="username"
+              
+              rules={[{ required: true, message: 'Please input your username!' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[{ required: true, message: 'Please input your password!' }]}
+            >
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item name="remember" valuePropName="checked">
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+          <Table columns={columns} dataSource={servicesList} />
+        </>
     );
 }
 
