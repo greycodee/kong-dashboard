@@ -1,6 +1,7 @@
 import React,{useEffect,useState }from 'react';
 import { Space, Table, Tag, Button} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import {PlusOutlined} from '@ant-design/icons'
 import axios from 'axios';
 import AddService from './AddService';
 interface ServicesListProps {
@@ -84,7 +85,7 @@ const KongServices: React.FC = () => {
   
     return (
         <>
-          <Button type="primary" style={{marginTop:10}} onClick={showDrawer}>添加Service</Button>
+          <Button type="primary" style={{marginTop:10}} onClick={showDrawer} icon={<PlusOutlined />}>添加Service</Button>
           <Table columns={columns} dataSource={servicesList} style={{marginTop:10}}/>
           <AddService open={open} onClose={onClose} showDrawer={showDrawer} ></AddService>
         </>
