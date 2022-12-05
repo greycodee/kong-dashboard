@@ -1,7 +1,9 @@
 import React,{useEffect,useState }from 'react';
-import { Space, Table, Tag } from 'antd';
+import { Space, Table, Tag,Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import {PlusOutlined} from '@ant-design/icons'
 import axios from 'axios';
+import AddRoute from './AddRoute';
 
 
 interface Service {
@@ -101,6 +103,15 @@ const columns: ColumnsType<RoutesListProps> = [
 
 const KongRouter: React.FC = () => {
     const [routesList,setroutesList] = useState<RoutesListProps[]>([]);
+    const [open, setOpen] = useState(false);
+
+    const showDrawer = () => {
+      setOpen(true);
+    };
+
+    const onClose = () => {
+      setOpen(false);
+    };
 
     useEffect(() => {
         axios.get('/api/routes').then(res => {
@@ -111,7 +122,11 @@ const KongRouter: React.FC = () => {
     },[]);
 
     return (
+      <>
+        <Button type="primary" style={{marginTop:10}} onClick={showDrawer} icon={<PlusOutlined />}>添加Route</Button>
         <Table columns={columns} dataSource={routesList} />
+        <AddRoute open={open} onClose={onClose} showDrawer={showDrawer} ></AddRoute>
+      </>
     );
 }
 
