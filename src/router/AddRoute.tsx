@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { PlusOutlined,MinusCircleOutlined } from '@ant-design/icons';
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Space, Drawer, Form, Input, Row, Select, InputNumber, Tag, Switch, message } from 'antd';
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import axios from 'axios';
@@ -86,24 +86,40 @@ const AddRoute: FC<AddRouteProps> = (props) => {
 
 
     const onFinish = (values: any) => {
+        console.log('Before:', values);
+        if (values.headers && values.headers.length > 0) {
+            let headersMap = new Map<string, string>();
+            values.headers = values.headers.map((item: any) => {
+                headersMap.set(item.key, item.value);
+                // console.log('name:', item.key,"value:", item.value);
+            })
+            values.headers = Object.fromEntries(headersMap);
+        }
+
+        if (values.service) {
+            let serviceMap = new Map<string, string>();
+            serviceMap.set(values.service.type, values.service.value);
+            values.service = Object.fromEntries(serviceMap);
+        }
+
         console.log('Success:', values);
 
-        // 请求接口
-        // axios.post('/api/routes',values).then(res=>{
-        //   console.log(res);
-        //   props.onClose();
-        //   form.resetFields();
-        //   messageApi.open({
-        //     type: 'success',
-        //     content: 'add routes success!',
-        //   });
-        // }).catch(e=>{
-        //   console.log(e);
-        //   messageApi.open({
-        //     type: 'error',
-        //     content: 'add failed!',
-        //   });
-        // })
+        //请求接口
+        axios.post('/api/routes',values).then(res=>{
+          console.log(res);
+          props.onClose();
+          form.resetFields();
+          messageApi.open({
+            type: 'success',
+            content: 'add routes success!',
+          });
+        }).catch(e=>{
+          console.log(e);
+          messageApi.open({
+            type: 'error',
+            content: 'add failed!',
+          });
+        })
 
     };
 
@@ -135,13 +151,13 @@ const AddRoute: FC<AddRouteProps> = (props) => {
                                 <Input placeholder="Please enter route name" />
                             </Form.Item>
                         </Col>
-                        
+
                     </Row>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
                                 name="hosts"
-                                label="hosts"
+                                label="Hosts"
                             >
                                 <Select
                                     mode="tags"
@@ -192,95 +208,127 @@ const AddRoute: FC<AddRouteProps> = (props) => {
                             </Form.Item>
                         </Col>
                     </Row>
+
                     <Row gutter={16}>
+                        <Col className='ant-form-item-label'>
+                            <Space>Headers</Space>
+                        </Col>
+
+                    </Row>
                     <Form.List name="headers">
                         {(fields, { add, remove }) => (
-                        <>
-                            {fields.map(({ key, name, ...restField }) => (
-                            <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                <Form.Item
-                                {...restField}
-                                name={[name,key]}
-                                rules={[{ required: true, message: 'Missing first name' }]}
-                                >
-                                <Input placeholder="First Name" />
-                                </Form.Item>
-                                :
-                                <Form.Item
-                                {...restField}
-                                name={[name, 'last']}
-                                rules={[{ required: true, message: 'Missing last name' }]}
-                                >
-                                <Input placeholder="Last Name" />
-                                </Form.Item>
-                                <MinusCircleOutlined onClick={() => remove(name)} />
-                            </Space>
-                            ))}
-                            <Form.Item>
-                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                Add field
-                            </Button>
-                            </Form.Item>
-                        </>
+                            <>
+                                {fields.map(({ key, name, ...restField }) => (
+                                    <Row gutter={16}>
+                                        <Col span={10}>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, "key"]}
+                                                rules={[{ required: true, message: 'Missing first name' }]}
+                                            >
+                                                <Input placeholder="Key" />
+                                            </Form.Item>
+                                        </Col>
+
+                                        <Col span={10}>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'value']}
+                                                rules={[{ required: true, message: 'Missing last name' }]}
+                                            >
+
+                                                <Input placeholder="Value" />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={2}>
+                                            <MinusCircleOutlined onClick={() => remove(name)} />
+                                        </Col>
+                                    </Row>
+                                ))}
+                                <Row gutter={16}>
+                                    <Col span={20}>
+                                        <Form.Item>
+                                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                Add field
+                                            </Button>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                            </>
                         )}
                     </Form.List>
 
-                    </Row>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                name="host"
-                                label="Host"
+                                name="https_redirect_status_code"
+                                label="https_redirect_status_code"
+                                initialValue={426}
                                 rules={[{ required: true, message: 'Please choose the approver' }]}
                             >
-                                <Input placeholder="Please enter user name" />
+                                <InputNumber placeholder="Please enter user name" style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                name="port"
-                                label="Port"
-
+                                name="regex_priority"
+                                label="Regex Priority"
                             >
-                                <InputNumber defaultValue={80} style={{ width: '100%' }} />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="path"
-                                label="Path"
-
-                            >
-                                <Input placeholder="Please enter user name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="connect_timeout"
-                                label="Connect Timeout"
-
-                            >
-                                <InputNumber defaultValue={6000} style={{ width: '100%' }} />
+                                <InputNumber style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                name="write_timeout"
-                                label="Write Timeout"
+                                name="strip_path"
+                                label="Strip Path"
+                                valuePropName="checked"
+                                initialValue={true}
                             >
-                                <InputNumber defaultValue={6000} style={{ width: '100%' }} />
+                                <Switch />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
-                                name="read_timeout"
-                                label="Read Timeout"
+                                name="path_handling"
+                                label="Path Handling"
                             >
-                                <InputNumber defaultValue={6000} style={{ width: '100%' }} />
+                                <Input style={{ width: '100%' }} />
+                            </Form.Item>
+                        </Col>
+
+
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={8}>
+                            <Form.Item
+                                name="preserve_host"
+                                label="Preserve Host"
+                                valuePropName="checked"
+                                initialValue={false}
+                            >
+                                <Switch/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item
+                                name="request_buffering"
+                                label="Request Buffering"
+                                valuePropName="checked"
+                                initialValue={true}
+                            >
+                                <Switch />
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item
+                                name="response_buffering"
+                                label="Response Buffering"
+                                valuePropName="checked"
+                                initialValue={true}
+                            >
+                                <Switch />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -290,7 +338,6 @@ const AddRoute: FC<AddRouteProps> = (props) => {
                             <Form.Item
                                 name="tags"
                                 label="Tags"
-
                             >
                                 <Select
                                     mode="multiple"
@@ -301,60 +348,33 @@ const AddRoute: FC<AddRouteProps> = (props) => {
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item
-                                name="client_certificate"
-                                label="Client Certificate"
-                            >
-                                <InputNumber defaultValue={6000} style={{ width: '100%' }} />
+                            <Form.Item label="Service">
+                                <Input.Group compact>
+                               
+                                    <Form.Item
+                                        name={['service', 'type']}
+                                        noStyle
+                                        rules={[{ required: true, message: 'Province is required' }]}
+                                        initialValue="id"
+                                    >
+                                        <Select style={{ width: '25%' }} placeholder="Select province">
+                                            <Option value="id">ID</Option>
+                                            <Option value="name">NAME</Option>
+                                        </Select>
+                                    </Form.Item>
+                                    
+                                    <Form.Item
+                                        name={['service', 'value']}
+                                        noStyle
+                                        rules={[{ required: true, message: 'Street is required' }]}
+                                    >
+                                        <Input style={{ width: '75%' }}  placeholder="Input street" />
+                                    </Form.Item>
+                                  
+                                </Input.Group>
                             </Form.Item>
                         </Col>
                     </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="tls_verify"
-                                label="TLS Verify"
-
-                            >
-                                <Switch />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="tls_verify_depth"
-                                label="TLS Verify Depth"
-                            >
-                                <Input style={{ width: '100%' }} />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="ca_certificates"
-                                label="Ca Certificates"
-
-                            >
-                                <Select
-                                    mode="multiple"
-                                    tagRender={tagRender}
-                                    placeholder="Please choose the type"
-                                    options={cas}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="enabled"
-                                label="Enabled"
-
-                            >
-                                <Switch defaultChecked />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-
-
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item>
