@@ -91,7 +91,6 @@ const AddRoute: FC<AddRouteProps> = (props) => {
             let headersMap = new Map<string, string>();
             values.headers = values.headers.map((item: any) => {
                 headersMap.set(item.key, item.value);
-                // console.log('name:', item.key,"value:", item.value);
             })
             values.headers = Object.fromEntries(headersMap);
         }
@@ -231,13 +230,20 @@ const AddRoute: FC<AddRouteProps> = (props) => {
                                         </Col>
 
                                         <Col span={10}>
+
                                             <Form.Item
                                                 {...restField}
                                                 name={[name, 'value']}
                                                 rules={[{ required: true, message: 'Missing last name' }]}
                                             >
 
-                                                <Input placeholder="Value" />
+                                                {/* <Input placeholder="Value" /> */}
+
+                                                <Select
+                                                    mode="tags"
+                                                    style={{ width: '100%' }}
+                                                    placeholder="Tags Mode"
+                                                />
                                             </Form.Item>
                                         </Col>
                                         <Col span={2}>
