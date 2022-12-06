@@ -1,4 +1,4 @@
-import React,{useEffect,useState }from 'react';
+import React,{useEffect,useRef,useState }from 'react';
 import { Space, Table, Tag, Button} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import {PlusOutlined} from '@ant-design/icons'
@@ -64,6 +64,7 @@ const columns: ColumnsType<ServicesListProps> = [
 const KongServices: React.FC = () => {
     const [servicesList,setServicesList] = useState<ServicesListProps[]>([]);
     const [open, setOpen] = useState(false);
+    const table = useRef(0);
 
     const showDrawer = () => {
       setOpen(true);
@@ -86,7 +87,7 @@ const KongServices: React.FC = () => {
     return (
         <>
           <Button type="primary" style={{marginTop:10}} onClick={showDrawer} icon={<PlusOutlined />}>添加Service</Button>
-          <Table columns={columns} dataSource={servicesList} style={{marginTop:10}}/>
+          <Table rowKey="id" columns={columns} dataSource={servicesList} style={{marginTop:10}}/>
           <AddService open={open} onClose={onClose} showDrawer={showDrawer} ></AddService>
         </>
     );

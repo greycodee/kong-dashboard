@@ -124,7 +124,7 @@ const KongRouter: React.FC = () => {
     return (
       <>
         <Button type="primary" style={{marginTop:10}} onClick={showDrawer} icon={<PlusOutlined />}>添加Route</Button>
-        <Table columns={columns} dataSource={routesList} />
+        <Table rowKey="id" columns={columns} dataSource={routesList} />
         <AddRoute open={open} onClose={onClose} showDrawer={showDrawer} ></AddRoute>
       </>
     );
