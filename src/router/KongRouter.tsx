@@ -5,6 +5,8 @@ import {PlusOutlined} from '@ant-design/icons'
 import axios from 'axios';
 import AddRoute from './AddRoute';
 
+const { Column } = Table;
+
 
 interface Service {
     id: string;
@@ -34,73 +36,6 @@ interface RoutesListProps {
     protocols: string[];
 }
 
-
-const columns: ColumnsType<RoutesListProps> = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Protocol',
-      key: 'protocol',
-      dataIndex: 'protocol',
-      render: (_, { protocols }) => (
-        <>
-          {protocols.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      title: 'Paths',
-      key: 'paths',
-      dataIndex: 'paths',
-      render: (_, { paths }) => (
-        <>
-          {paths.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <a>Invite {record.name}</a>
-          <a>Delete</a>
-        </Space>
-      ),
-    },
-  ];
-
-
-
 const KongRouter: React.FC = () => {
     const [routesList,setroutesList] = useState<RoutesListProps[]>([]);
     const [open, setOpen] = useState(false);
@@ -113,18 +48,76 @@ const KongRouter: React.FC = () => {
       setOpen(false);
     };
 
+
+
     useEffect(() => {
         axios.get('/api/routes').then(res => {
-            setroutesList([...routesList,...res.data.data]);
+            setroutesList([...res.data.data]);
         }).catch(err => {
             console.log(err);
         })
     },[]);
 
+    const deleteRoute = (id:string) =>{
+      axios.delete(`/api/routes/${id}`).then((res)=>{
+        console.log("删除成功",res);
+        axios.get('/api/routes').then(res => {
+          setroutesList([...res.data.data]);
+        }).catch(err => {
+            console.log(err);
+        })
+        
+      }).catch((err)=>{
+        console.log(err);
+        console.log(err.response.data);
+      })
+    }
+
     return (
       <>
         <Button type="primary" style={{marginTop:10}} onClick={showDrawer} icon={<PlusOutlined />}>添加Route</Button>
-        <Table rowKey="id" columns={columns} dataSource={routesList} />
+        <Table rowKey="id"  dataSource={routesList} >
+          <Column title="ID" dataIndex="id" key="id" />
+          <Column title="Name" dataIndex="name" key="name" />
+          <Column 
+            title="Protocol" 
+            dataIndex="protocols" 
+            key="protocols" 
+            render={(protocols: string[]) => (
+              <>
+                {protocols.map((tag) => (
+                  <Tag color="blue" key={tag}>
+                    {tag}
+                  </Tag>
+                ))}
+              </>
+            )}
+          />
+          <Column 
+            title="Paths" 
+            dataIndex="paths" 
+            key="paths" 
+            render={(paths: string[]) => (
+              <>
+                {paths.map((tag) => (
+                  <Tag color="blue" key={tag}>
+                    {tag}
+                  </Tag>
+                ))}
+              </>
+            )}
+          />
+          <Column 
+            title="Action" 
+            key="action" 
+            render={(_: any, record: RoutesListProps) => (
+              <Space size="middle">
+                <a onClick={()=>{deleteRoute(record.id)}}>Delete</a>
+              </Space>
+            )}
+          />
+
+        </Table>
         <AddRoute open={open} onClose={onClose} showDrawer={showDrawer} ></AddRoute>
       </>
     );

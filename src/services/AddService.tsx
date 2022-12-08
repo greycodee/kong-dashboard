@@ -10,6 +10,8 @@ interface AddServiceProps {
   open: boolean;
   onClose: any;
   showDrawer: any;
+  successCount: number;
+  setSuccessCount: any;
 }
 
 
@@ -65,21 +67,6 @@ const tagRender = (props: CustomTagProps) => {
   );
 };
 
-const selectBefore = (
-  <Select defaultValue="http://" className="select-before">
-    <Option value="http://">http://</Option>
-    <Option value="https://">https://</Option>
-  </Select>
-);
-const selectAfter = (
-  <Select defaultValue=".com" className="select-after">
-    <Option value=".com">.com</Option>
-    <Option value=".jp">.jp</Option>
-    <Option value=".cn">.cn</Option>
-    <Option value=".org">.org</Option>
-  </Select>
-);
-
 
 const AddService: FC<AddServiceProps> = (props) => {
   const [form] = Form.useForm();
@@ -87,19 +74,21 @@ const AddService: FC<AddServiceProps> = (props) => {
   
 
   const onFinish = (values: any) => {
-    console.log('Success:', values);
+    console.log('Params:', values);
 
     // 请求接口
     axios.post('/api/services',values).then(res=>{
       console.log(res);
       props.onClose();
       form.resetFields();
+      props.setSuccessCount(props.successCount+1);
       messageApi.open({
         type: 'success',
         content: 'add service success!',
       });
+
     }).catch(e=>{
-      console.log(e);
+      console.log(e.response.data);
       messageApi.open({
         type: 'error',
         content: 'add failed!',
@@ -107,9 +96,6 @@ const AddService: FC<AddServiceProps> = (props) => {
     })
     
   };
-
-  
-
 
   return (
     <>
@@ -141,9 +127,8 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="url"
                 label="Url"
-                initialValue={"mysite"}
               >
-                <Input addonBefore={selectBefore} addonAfter={selectAfter} />
+                <Input />
               </Form.Item>
             </Col>
           </Row>
@@ -152,7 +137,7 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="retries"
                 label="Retries"
-                initialValue={5}
+              
               >
                 <InputNumber style={{ width: '100%' }}/>
               </Form.Item>
@@ -161,7 +146,6 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="protocol"
                 label="Protocol"
-                rules={[{ required: true, message: 'Please choose the type' }]}
               >
                 <Select 
                   placeholder="Please choose the type"
@@ -175,7 +159,6 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="host"
                 label="Host"
-                rules={[{ required: true, message: 'Please choose the approver' }]}
               >
                 <Input placeholder="Please enter user name" />
               </Form.Item>
@@ -184,7 +167,7 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="port"
                 label="Port"
-                initialValue={80}
+
               >
                 <InputNumber style={{ width: '100%' }}/>
               </Form.Item>
@@ -204,7 +187,7 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="connect_timeout"
                 label="Connect Timeout"
-                initialValue={6000}
+
               >
                 <InputNumber  style={{ width: '100%' }}/>
               </Form.Item>
@@ -215,7 +198,7 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="write_timeout"
                 label="Write Timeout"
-                initialValue={6000}
+
               >
                 <InputNumber style={{ width: '100%' }}/>
               </Form.Item>
@@ -224,7 +207,7 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="read_timeout"
                 label="Read Timeout"
-                initialValue={6000}
+
               >
                 <InputNumber style={{ width: '100%' }}/>
               </Form.Item>
@@ -250,7 +233,7 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="client_certificate"
                 label="Client Certificate"
-                initialValue={6000}
+
               >
                 <InputNumber style={{ width: '100%' }}/>
               </Form.Item>
@@ -261,8 +244,6 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="tls_verify"
                 label="TLS Verify"
-                valuePropName="checked"
-                initialValue={false}
               >
                 <Switch />
               </Form.Item>
@@ -296,7 +277,7 @@ const AddService: FC<AddServiceProps> = (props) => {
                 name="enabled"
                 label="Enabled"
                 valuePropName="checked"
-                initialValue={true}
+                // initialValue={true}
               >
                 <Switch />
               </Form.Item>

@@ -4,6 +4,8 @@ import type { ColumnsType } from 'antd/es/table';
 import {PlusOutlined} from '@ant-design/icons'
 import axios from 'axios';
 import AddService from './AddService';
+
+const { Column } = Table;
 interface ServicesListProps {
     created_at: number;
     tls_verify?: any;
@@ -25,51 +27,11 @@ interface ServicesListProps {
     updated_at: number;
 }
 
-const getid = (id:string) =>{
-  console.log(id);
-}
-
-const columns: ColumnsType<ServicesListProps> = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Host',
-    dataIndex: 'host',
-    key: 'host',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Protocol',
-    key: 'protocol',
-    dataIndex: 'protocol',
-    render: (proto) => <Tag color='GREEN' key={proto}>{proto.toUpperCase()}</Tag>,
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a onClick={()=>{console.log("delete",record.id)}}>Delete</a>
-        
-      </Space>
-    ),
-  },
-];
-
 
 const KongServices: React.FC = () => {
     const [servicesList,setServicesList] = useState<ServicesListProps[]>([]);
     const [open, setOpen] = useState(false);
+    const [successCount,setSuccessCount] = useState(0);
 
     const showDrawer = () => {
       setOpen(true);
@@ -79,21 +41,73 @@ const KongServices: React.FC = () => {
       setOpen(false);
     };
 
+    const deleteService = (id:string) =>{
+      axios.delete(`/api/services/${id}`).then((res)=>{
+        console.log("删除成功",res);
+        axios.get('/api/services').then(res => {
+          setServicesList([...res.data.data]);
+          console.log(servicesList)
+        }).catch(err => {
+            console.log(err);
+        })
+      }).catch((err)=>{
+        console.log(err);
+        console.log(err.response.data);
+      })
+    }
+
 
     useEffect(() => {
         axios.get('/api/services').then(res => {
-            setServicesList([...servicesList,...res.data.data]);
+            setServicesList([...res.data.data]);
             console.log(servicesList)
         }).catch(err => {
             console.log(err);
         })
     },[]);
+
+    useEffect(() => {
+      axios.get('/api/services').then(res => {
+          setServicesList([...res.data.data]);
+          console.log("cusssss====",servicesList)
+      }).catch(err => {
+          console.log(err);
+      })
+  },[successCount]);
   
     return (
         <>
           <Button type="primary" style={{marginTop:10}} onClick={showDrawer} icon={<PlusOutlined />}>添加Service</Button>
-          <Table rowKey="id" columns={columns} dataSource={servicesList} style={{marginTop:10}}/>
-          <AddService open={open} onClose={onClose} showDrawer={showDrawer} ></AddService>
+          <Table 
+            rowKey="id" 
+            dataSource={servicesList} 
+            style={{marginTop:10}}>
+            <Column title="ID" dataIndex="id" key="id" />
+            <Column title="Name" dataIndex="name" key="name" />
+            <Column title="Host" dataIndex="host" key="host" />
+            <Column 
+              title="Protocol" 
+              dataIndex="protocol" 
+              key="protocol" 
+              render={(protocol: string) => (
+                <>
+                    <Tag color="blue" key={protocol}>
+                      {protocol}
+                    </Tag>
+                </>
+              )}
+            />
+            <Column 
+              title="Action" 
+              key="action" 
+              render={(_: any, record: ServicesListProps) => (
+                <Space size="middle">
+                  <a onClick={()=>{deleteService(record.id)}}>Delete</a>
+                </Space>
+              )}
+            />   
+          </Table>
+          <AddService open={open} onClose={onClose} showDrawer={showDrawer} setSuccessCount={setSuccessCount} successCount={successCount}></AddService>
         </>
     );
 }
