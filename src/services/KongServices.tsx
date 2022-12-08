@@ -64,7 +64,6 @@ const columns: ColumnsType<ServicesListProps> = [
 const KongServices: React.FC = () => {
     const [servicesList,setServicesList] = useState<ServicesListProps[]>([]);
     const [open, setOpen] = useState(false);
-    const table = useRef(0);
 
     const showDrawer = () => {
       setOpen(true);
