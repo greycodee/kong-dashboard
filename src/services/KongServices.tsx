@@ -25,6 +25,10 @@ interface ServicesListProps {
     updated_at: number;
 }
 
+const getid = (id:string) =>{
+  console.log(id);
+}
+
 const columns: ColumnsType<ServicesListProps> = [
   {
     title: 'ID',
@@ -52,9 +56,11 @@ const columns: ColumnsType<ServicesListProps> = [
     title: 'Action',
     key: 'action',
     render: (_, record) => (
+      
       <Space size="middle">
         <a>Invite {record.name}</a>
-        <a>Delete</a>
+        <a onClick={()=>{console.log("delete",record.id)}}>Delete</a>
+        
       </Space>
     ),
   },

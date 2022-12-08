@@ -141,8 +141,9 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="url"
                 label="Url"
+                initialValue={"mysite"}
               >
-                <Input addonBefore={selectBefore} addonAfter={selectAfter} defaultValue="mysite" />
+                <Input addonBefore={selectBefore} addonAfter={selectAfter} />
               </Form.Item>
             </Col>
           </Row>
@@ -151,9 +152,9 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="retries"
                 label="Retries"
-                
+                initialValue={5}
               >
-                <InputNumber defaultValue={5}  style={{ width: '100%' }}/>
+                <InputNumber style={{ width: '100%' }}/>
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -183,9 +184,9 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="port"
                 label="Port"
-                
+                initialValue={80}
               >
-                <InputNumber defaultValue={80}  style={{ width: '100%' }}/>
+                <InputNumber style={{ width: '100%' }}/>
               </Form.Item>
             </Col>
           </Row>
@@ -203,9 +204,9 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="connect_timeout"
                 label="Connect Timeout"
-                
+                initialValue={6000}
               >
-                <InputNumber defaultValue={6000}  style={{ width: '100%' }}/>
+                <InputNumber  style={{ width: '100%' }}/>
               </Form.Item>
             </Col>
           </Row>
@@ -214,16 +215,18 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="write_timeout"
                 label="Write Timeout"
+                initialValue={6000}
               >
-                <InputNumber defaultValue={6000}  style={{ width: '100%' }}/>
+                <InputNumber style={{ width: '100%' }}/>
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 name="read_timeout"
                 label="Read Timeout"
+                initialValue={6000}
               >
-                <InputNumber defaultValue={6000}  style={{ width: '100%' }}/>
+                <InputNumber style={{ width: '100%' }}/>
               </Form.Item>
             </Col>
           </Row>
@@ -247,8 +250,9 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="client_certificate"
                 label="Client Certificate"
+                initialValue={6000}
               >
-                <InputNumber defaultValue={6000}  style={{ width: '100%' }}/>
+                <InputNumber style={{ width: '100%' }}/>
               </Form.Item>
             </Col>
           </Row>
@@ -257,7 +261,8 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="tls_verify"
                 label="TLS Verify"
-                
+                valuePropName="checked"
+                initialValue={false}
               >
                 <Switch />
               </Form.Item>
@@ -290,9 +295,10 @@ const AddService: FC<AddServiceProps> = (props) => {
               <Form.Item
                 name="enabled"
                 label="Enabled"
-                
+                valuePropName="checked"
+                initialValue={true}
               >
-                <Switch defaultChecked />
+                <Switch />
               </Form.Item>
             </Col>
           </Row>
