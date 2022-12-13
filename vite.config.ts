@@ -8,7 +8,7 @@ export default defineConfig({
     cors: true, // 默认启用并允许任何源
     proxy: {
       '/api': {
-        target: 'http://10.244.33.218:8001/',
+        target: 'http://127.0.0.1:8001/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
